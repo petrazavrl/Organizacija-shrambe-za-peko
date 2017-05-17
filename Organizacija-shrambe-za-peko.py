@@ -13,11 +13,28 @@ def sestavine_za_recept(recept):
                 vse_besede = vrstica.split()
                 kolicina = vse_besede[0]
                 sestavina = ' '.join(vse_besede[1:])
-                #print(kolicina)
-                #print(sestavina)
-                for kolicina, sestavina in f:
-                    print('Potrebujete {} {}'.format(kolicina, sestavina))
+                print(kolicina, sestavina)
+                
+                
 
+def shramba(datoteka):
+    with open(datoteka) as f:
+        for vrstica in f:
+            vse_besede = vrstica.split()
+            kolicina = vse_besede[0]
+            sestavina = ' '.join(vse_besede[1:])
+            print(kolicina, sestavina)
+            
+def nakupovalni_listek(datoteka):
+    with open(datoteka) as f:
+        for vrstica in f:
+            vse_besede = vrstica.split()
+            kolicina = vse_besede[0]
+            sestavina = ' '.join(vse_besede[1:])
+            print("Kupiti je potrebno")
+            print(kolicina, sestavina + '.')
+
+    
 def kar_kupim(nakupovalni_listek, shramba):
     shramba.append(nakupovalni_listek)
 
