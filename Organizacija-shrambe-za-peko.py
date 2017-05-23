@@ -31,9 +31,17 @@ class Program:
                     sestavina = ' '.join(vse_besede[1:])
                     print(kolicina, sestavina)
 
-
+    def nalozi_listek(self, listek):
+        with open(listek) as f:
+            for vrstica in f:
+                print(vrstica)
+                vse_besede = vrstica.split()
+                kolicina = int(vse_besede[0])
+                sestavina = ' '.join(vse_besede[1:])
+                self.listek.dodaj(kolicina, sestavina)
 
 class Recept:
+
 
     def __init__(self, recept):
         self.recept = {}
