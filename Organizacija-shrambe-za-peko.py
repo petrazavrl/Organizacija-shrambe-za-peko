@@ -1,19 +1,31 @@
+SHRAMBA = "V-shrambi.txt"
+RECEPTI = "Recepti"
+import os
+
 class Program:
 
     def __init__(self):
         self.shramba = Shramba()
-        self.recept= Recept()
+        self.recepti = []
         
-    def nalozi_shrambo(self, datoteka):
-        with open(datoteka) as f:
-            for vrstica in f:
-                print(vrstica)
-                vse_besede = vrstica.split()
-                kolicina = int(vse_besede[0])
-                sestavina = ' '.join(vse_besede[1:])
-                self.shramba.dodaj(kolicina, sestavina)
+        self.nalozi_shrambo()
+        self.nalozi_recepte()
+        
+    def nalozi_shrambo(self):
+        self.shramba.preberi_iz_datoteke()
 
-    def nalozi_recepte(self, recept):
+    def nalozi_recepte(self):
+        for datoteka in os.listdir(RECEPTI):
+            r = Recept()
+            r.preberi_iz_datoteke(RECEPTI + "\\" + datoteka)
+            self.recepti.append(r)
+            
+        return self.recepti
+        
+    # def nalozi_listek
+
+    
+    def nalozi_recepte2(self, recept):
         print('Za recept potrebujemo:')
         with open(recept) as f:
             ali_smo_v_sestavinah = False
@@ -43,12 +55,37 @@ class Program:
 class Recept:
 
 
-    def __init__(self, recept):
-        self.recept = {}
-        
+    def __init__(self, naslov="", sestavine={}, postopek=""):
+        self.naslov = naslov
+        self.sestavine = sestavine
+        self.postopek = postopek
+
+    def preberi_iz_datoteke(self, datoteka):
+        with open(datoteka) as f:
+            self.naslov = f.readline()
+            ali_smo_v_sestavinah = False
+            ali_smo_v_postopku = False
+            for vrstica in f:
+                # print(vrstica)
+                if "Sestavine" in vrstica:
+                    ali_smo_v_sestavinah = True
+
+                if "Postopek" in vrstica:
+                    ali_smo_v_sestavinah = False
+                    ali_smo_v_postopku = True
+                    self.postopek = f.readlines(ali_smo_v_postopku)
+
+                if ali_smo_v_sestavinah and vrstica.strip() != "" and vrstica.strip() != "Sestavine":
+                    vse_besede = vrstica.split()
+                    kolicina = vse_besede[0]
+                    sestavina = ' '.join(vse_besede[1:])
+                    self.sestavine[sestavina] = kolicina
+            
+
+                # TODO: preberi in shrani postopek
 
 class Shramba:
-
+    
     def __init__(self):
         self.slovar_sestavin = {}
 
@@ -57,8 +94,18 @@ class Shramba:
 
 
     def shrani_v_datoteko(self, kolicina, sestavina):        
-        with open('V-shrambi.txt', 'a') as f:
+        with open(SHRAMBA, 'a') as f:
             print('{} {}'.format(kolicina, sestavina), file=f)
+
+    def preberi_iz_datoteke(self):
+        with open(SHRAMBA) as f:
+            for vrstica in f:
+                print(vrstica)
+                vse_besede = vrstica.split()
+                kolicina = int(vse_besede[0])
+                sestavina = ' '.join(vse_besede[1:])
+                self.dodaj(kolicina, sestavina)
+
 
     def odstrani(self, nakupovalni_seznam):
         l = Listek()
